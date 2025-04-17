@@ -53,6 +53,7 @@ kotlin {
             implementation(libs.ktor.serialization) // Ktor serialization dependency for shared module
 
 
+
         }
 
         androidMain.dependencies {
@@ -77,11 +78,17 @@ android {
     compileSdk = 35
     defaultConfig {
         minSdk = 24
+        buildConfigField("String", "OPEN_WEATHER_API_KEY", "\"${project.properties["OPEN_WEATHER_API_KEY"]}\"")
+
+    }
+    buildFeatures {
+        buildConfig = true
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17  // Sql Delight works perfect with Java 17
         targetCompatibility = JavaVersion.VERSION_17  // Sql Delight works perfect with Java 17
     }
+
 }
 
 sqldelight{
