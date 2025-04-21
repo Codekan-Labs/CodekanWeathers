@@ -1,0 +1,26 @@
+CREATE TABLE Forecast (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    city TEXT NOT NULL,
+    country TEXT NOT NULL,
+    date TEXT NOT NULL,
+    temperature REAL NOT NULL,
+    humidity INTEGER NOT NULL,
+    windSpeed REAL NOT NULL,
+    description TEXT NOT NULL,
+    lastUpdated INTEGER NOT NULL,
+    UNIQUE(city, date)
+);
+
+insertOrUpdate:
+INSERT OR REPLACE INTO Forecast (city, country, date, temperature, humidity, windSpeed, description, lastUpdated)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+
+selectByCity:
+SELECT * FROM Forecast WHERE city = ? ORDER BY date ASC;
+
+
+selectAll:
+SELECT * FROM Forecast;
+
+deleteByCity:
+DELETE FROM Forecast WHERE city = ?;

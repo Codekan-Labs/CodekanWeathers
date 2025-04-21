@@ -1,0 +1,23 @@
+CREATE TABLE Weather (
+    city TEXT NOT NULL PRIMARY KEY,
+    country TEXT NOT NULL,
+    temperature REAL NOT NULL,
+    humidity INTEGER NOT NULL,
+    windSpeed REAL NOT NULL,
+    description TEXT NOT NULL,
+    lastUpdated INTEGER NOT NULL
+);
+
+insertOrUpdate:
+INSERT OR REPLACE INTO Weather (city, country, temperature, humidity, windSpeed, description, lastUpdated)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+selectByCity:
+SELECT * FROM Weather WHERE city = ?;
+
+selectAll:
+SELECT * FROM Weather;
+
+
+deleteByCity:
+DELETE FROM Weather WHERE city = ?;

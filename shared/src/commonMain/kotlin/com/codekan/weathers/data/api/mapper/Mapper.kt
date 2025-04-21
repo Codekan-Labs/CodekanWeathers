@@ -1,6 +1,5 @@
 package com.codekan.weathers.data.api.mapper
 
-import com.codekan.weathers.data.api.model.Weather
 import com.codekan.weathers.data.api.model.WeatherResponse
 
 fun WeatherResponse.toDomain(): com.codekan.weathers.domain.model.Weather {
@@ -21,9 +20,9 @@ fun com.codekan.weathers.data.api.model.ForecastResponse.toDomain(): com.codekan
         forecastList = this.list.map { forecast ->
             com.codekan.weathers.domain.model.ForecastItem(
                 date = forecast.dt.toString(),
-                temperature = forecast.temp?.day ?: 0.0,
-                humidity = forecast.humidity ?: 0,
-                windSpeed = forecast.speed ?: 0.0,
+                temperature = forecast.main?.temp ?: 0.0,
+                humidity = forecast.main?.humidity ?: 0,
+                windSpeed = forecast.wind?.speed ?: 0.0,
                 description = forecast.weather.firstOrNull()?.description ?: ""
             )
         }

@@ -15,14 +15,13 @@ val appIdParamKey = "appid"
 val unitsParamKey = "units"
 val countOfTheDayParamKey = "cnt"
 class WeatherApi(
-    private val apiKey: String,
     private val client: KtorClient = KtorClient // Varsayılan olarak KtorClient kullan
 ) {
     suspend fun getCurrentWeather(city: String): Result<WeatherResponse> {
         return try {
             val response = client.client.get(weatherUrl) {
-                parameter(cityParamKey, provideApiKey())
-                parameter(appIdParamKey, apiKey)
+                parameter(cityParamKey, city)
+                parameter(appIdParamKey, provideApiKey())
                 parameter(unitsParamKey, "metric")
             }
             if (response.status == HttpStatusCode.OK) {

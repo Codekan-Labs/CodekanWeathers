@@ -51,7 +51,7 @@ kotlin {
             implementation(libs.ktor.client.core) // Ktor client core dependency for shared module
             implementation(libs.ktor.client.content.negotiation) // Ktor client content negotiation dependency for shared module
             implementation(libs.ktor.serialization) // Ktor serialization dependency for shared module
-
+            implementation(libs.kotlinx.date.time)
 
 
         }
@@ -60,6 +60,7 @@ kotlin {
             implementation(libs.sql.delight.android) // Dependency for Android SqlDelight
             implementation(libs.koin.android)  // Koin dependency for DI in Android (Dependency Injection suitable for both Android and iOS)
             implementation(libs.ktor.android) // Ktor client Android dependency for shared module
+            implementation(libs.kotlinx.coroutines.core)
         }
 
         iosMain.dependencies {
@@ -94,7 +95,7 @@ android {
 sqldelight{
     databases {  // This is where you define your databases
         create("WeathersDatabase") {
-            packageName.set("com.codekan.weathers.database")
+            packageName.set("com.codekan.weathers.shared.database")
         }
     }
     linkSqlite = true // Enable this if you want to use the SQLite C API in xCode also add libsqlite3.tbd to your xCode project

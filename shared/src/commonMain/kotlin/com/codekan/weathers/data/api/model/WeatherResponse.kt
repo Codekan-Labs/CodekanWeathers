@@ -52,7 +52,8 @@ data class Main (
     @SerialName("pressure"   ) var pressure  : Int?    = null,
     @SerialName("humidity"   ) var humidity  : Int?    = null,
     @SerialName("sea_level"  ) var seaLevel  : Int?    = null,
-    @SerialName("grnd_level" ) var grndLevel : Int?    = null
+    @SerialName("grnd_level" ) var grndLevel : Int?    = null,
+    @SerialName("temp_kf"    ) var tempKf   : Double? = null
 
 )
 

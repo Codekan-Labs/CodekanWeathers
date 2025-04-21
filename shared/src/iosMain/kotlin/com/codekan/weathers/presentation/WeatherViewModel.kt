@@ -13,13 +13,11 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 
-actual class WeatherViewModel : KoinComponent {
-    private val getWeatherUseCase: GetWeatherUseCase by inject()
-    private val getForecastUseCase: GetForecastUseCase by inject()
-
+actual class WeatherViewModel actual constructor(
+    val getWeatherUseCase: GetWeatherUseCase,
+    val getForecastUseCase: GetForecastUseCase
+) {
     private val scope = CoroutineScope(Dispatchers.Main + SupervisorJob())
     private var weatherJob: Job? = null
     private var forecastJob: Job? = null
@@ -31,29 +29,53 @@ actual class WeatherViewModel : KoinComponent {
     actual val forecast: StateFlow<DataState<Forecast>> = _forecast.asStateFlow()
 
     actual fun getWeather(city: String) {
-        scope.launch {
+        // Önceki weatherJob'ı iptal et
+        weatherJob?.cancel()
+        weatherJob = scope.launch {
             _weather.value = DataState.Loading
-            getWeatherUseCase(city)
-                .onSuccess { weather ->
-                    _weather.value = DataState.Success(weather)
-                }
-                .onFailure { error ->
-                    _weather.value = DataState.Error(ErrorType.NetworkError)
-                }
+            getWeatherUseCase(city).collect { result ->
+                result
+                    .onSuccess { weather ->
+                        _weather.value = DataState.Success(weather)
+                    }
+                    .onFailure { error ->
+                        _weather.value = DataState.Error(
+                            errorType = when (error.message) {
+                                "No local data or data is stale for city: $city" -> ErrorType.StaleData
+                                else -> ErrorType.NetworkError
+                            },
+                            message = error.message
+                        )
+                    }
+            }
         }
     }
 
     actual fun getForecast(city: String, dayCount: Int) {
-       scope.launch {
+        // Önceki forecastJob'ı iptal et
+        forecastJob?.cancel()
+        forecastJob = scope.launch {
             _forecast.value = DataState.Loading
-            getForecastUseCase(city,dayCount)
-                .onSuccess { forecast ->
-                    _forecast.value = DataState.Success(forecast)
-                }
-                .onFailure { error ->
-                    _forecast.value = DataState.Error(ErrorType.NetworkError)
-                }
+            getForecastUseCase(city, dayCount).collect { result ->
+                result
+                    .onSuccess { forecast ->
+                        _forecast.value = DataState.Success(forecast)
+                    }
+                    .onFailure { error ->
+                        _forecast.value = DataState.Error(
+                            errorType = when (error.message) {
+                                "No local forecast data or data is stale for city: $city" -> ErrorType.StaleData
+                                else -> ErrorType.NetworkError
+                            },
+                            message = error.message
+                        )
+                    }
+            }
         }
     }
 
+    // ViewModel temizliği
+    fun clear() {
+        scope.cancel()
+    }
 }

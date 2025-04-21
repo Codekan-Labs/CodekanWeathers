@@ -22,28 +22,24 @@ data class City (
     @SerialName("coord"      ) var coord      : Coord?  = Coord(),
     @SerialName("country"    ) var country    : String? = null,
     @SerialName("population" ) var population : Int?    = null,
-    @SerialName("timezone"   ) var timezone   : Int?    = null
+    @SerialName("timezone"   ) var timezone   : Int?    = null,
+    @SerialName("sunrise"    ) var sunrise    : Int?    = null,
+    @SerialName("sunset"     ) var sunset     : Int?    = null
 
 )
 
 @Serializable
 data class DailyForecast (
 
-    @SerialName("dt"         ) var dt        : Int?               = null,
-    @SerialName("sunrise"    ) var sunrise   : Int?               = null,
-    @SerialName("sunset"     ) var sunset    : Int?               = null,
-    @SerialName("temp"       ) var temp      : Temp?              = Temp(),
-    @SerialName("feels_like" ) var feelsLike : FeelsLike?         = FeelsLike(),
-    @SerialName("pressure"   ) var pressure  : Int?               = null,
-    @SerialName("humidity"   ) var humidity  : Int?               = null,
-    @SerialName("weather"    ) var weather   : ArrayList<Weather> = arrayListOf(),
-    @SerialName("speed"      ) var speed     : Double?            = null,
-    @SerialName("deg"        ) var deg       : Int?               = null,
-    @SerialName("gust"       ) var gust      : Double?            = null,
-    @SerialName("clouds"     ) var clouds    : Int?               = null,
-    @SerialName("pop"        ) var pop       : Double?            = null,
-    @SerialName("rain"       ) var rain      : Double?            = null
-
+    @SerialName("dt"         ) var dt         : Int? = null,
+    @SerialName("main"       ) var main       : Main? = Main(),
+    @SerialName("weather"    ) var weather    : ArrayList<Weather> = arrayListOf(),
+    @SerialName("clouds"     ) var clouds     : Clouds? = Clouds(),
+    @SerialName("wind"       ) var wind       : Wind? = Wind(),
+    @SerialName("visibility" ) var visibility : Int? = null,
+    @SerialName("pop"        ) var pop        : Int? = null,
+    @SerialName("sys"        ) var sys        : Sys? = Sys(),
+    @SerialName("dt_txt"     ) var dtTxt      : String? = null,
 )
 
 @Serializable

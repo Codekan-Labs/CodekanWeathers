@@ -1,18 +1,30 @@
 package com.codekan.weathers
-/*
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.runtime.*/
 
-/*@Composable
-@Preview
+
+import androidx.compose.runtime.Composable
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.codekan.weathers.screen.ForecastScreen
+import com.codekan.weathers.screen.WeatherScreen
+
+@Composable
 fun App() {
-    MaterialTheme {
-
+    val navController = rememberNavController()
+    NavHost(
+        navController = navController,
+        startDestination = Screens.Weather.route,
+    ) {
+        composable(Screens.Weather.route) {
+            WeatherScreen(navController = navController)
+        }
+        composable(Screens.Forecast.route) {
+            ForecastScreen(navController = navController)
+        }
     }
-}*/
+}
+
+sealed class Screens(val route: String) {
+    object Weather : Screens("weather")
+    object Forecast : Screens("forecast")
+}
