@@ -1,5 +1,6 @@
 package com.codekan.weathers.presentation
 
+import com.codekan.weathers.data.api.DataState
 import com.codekan.weathers.domain.model.Forecast
 import com.codekan.weathers.domain.model.Weather
 import com.codekan.weathers.domain.usecase.GetForecastUseCase

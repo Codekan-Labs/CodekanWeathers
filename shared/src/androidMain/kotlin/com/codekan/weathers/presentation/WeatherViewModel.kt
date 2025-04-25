@@ -2,6 +2,7 @@ package com.codekan.weathers.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.codekan.weathers.data.api.DataState
 import com.codekan.weathers.domain.model.Forecast
 import com.codekan.weathers.domain.model.Weather
 import com.codekan.weathers.domain.usecase.GetForecastUseCase
@@ -24,13 +25,7 @@ actual class WeatherViewModel actual constructor(
     actual fun getWeather(city: String) {
         viewModelScope.launch {
             getWeatherUseCase(city).collect { result ->
-                result
-                    .onSuccess { weather ->
-                        _weather.value = DataState.Success(weather)
-                    }
-                    .onFailure { error ->
-                        _weather.value = DataState.Error(ErrorType.NetworkError)
-                    }
+                _weather.value = result
             }
         }
     }
@@ -38,13 +33,7 @@ actual class WeatherViewModel actual constructor(
     actual fun getForecast(city: String, dayCount: Int) {
         viewModelScope.launch {
             getForecastUseCase(city, dayCount).collect { result ->
-                result
-                    .onSuccess { forecast ->
-                        _forecast.value = DataState.Success(forecast)
-                    }
-                    .onFailure { error ->
-                        _forecast.value = DataState.Error(ErrorType.NetworkError)
-                    }
+                _forecast.value = result
             }
         }
     }

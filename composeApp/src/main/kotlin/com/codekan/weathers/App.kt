@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.codekan.weathers.screen.ForecastScreen
+import com.codekan.weathers.screen.SplashScreen
 import com.codekan.weathers.screen.WeatherScreen
 
 @Composable
@@ -15,6 +16,9 @@ fun App() {
         navController = navController,
         startDestination = Screens.Weather.route,
     ) {
+        composable(Screens.Splash.route) {
+            SplashScreen(navController = navController)
+        }
         composable(Screens.Weather.route) {
             WeatherScreen(navController = navController)
         }
@@ -25,6 +29,7 @@ fun App() {
 }
 
 sealed class Screens(val route: String) {
+    object Splash : Screens("splash")
     object Weather : Screens("weather")
     object Forecast : Screens("forecast")
 }

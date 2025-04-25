@@ -26,7 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.codekan.weathers.component.ForecastList
 import com.codekan.weathers.component.WeatherCard
-import com.codekan.weathers.presentation.DataState
+import com.codekan.weathers.data.api.DataState
 import com.codekan.weathers.presentation.WeatherViewModel
 import org.koin.compose.viewmodel.koinViewModel
 

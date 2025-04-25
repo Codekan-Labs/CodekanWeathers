@@ -1,8 +1,10 @@
-package com.codekan.weathers.presentation
+package com.codekan.weathers.data.api
+
+import io.ktor.http.HttpStatusCode
 
 // Hata türleri için sealed class (daha iyi hata yönetimi)
 sealed class ErrorType {
-    data object NetworkError : ErrorType()
+    data class NetworkError(val status : HttpStatusCode) : ErrorType()
     data object StaleData : ErrorType()
     data object DatabaseError : ErrorType()
     data class Unknown(val message: String) : ErrorType()

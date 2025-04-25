@@ -1,5 +1,6 @@
 package com.codekan.weathers.presentation
 
+import com.codekan.weathers.data.api.DataState
 import com.codekan.weathers.domain.model.Forecast
 import com.codekan.weathers.domain.model.Weather
 import com.codekan.weathers.domain.usecase.GetForecastUseCase
@@ -34,19 +35,7 @@ actual class WeatherViewModel actual constructor(
         weatherJob = scope.launch {
             _weather.value = DataState.Loading
             getWeatherUseCase(city).collect { result ->
-                result
-                    .onSuccess { weather ->
-                        _weather.value = DataState.Success(weather)
-                    }
-                    .onFailure { error ->
-                        _weather.value = DataState.Error(
-                            errorType = when (error.message) {
-                                "No local data or data is stale for city: $city" -> ErrorType.StaleData
-                                else -> ErrorType.NetworkError
-                            },
-                            message = error.message
-                        )
-                    }
+                _weather.value = result
             }
         }
     }
@@ -57,19 +46,7 @@ actual class WeatherViewModel actual constructor(
         forecastJob = scope.launch {
             _forecast.value = DataState.Loading
             getForecastUseCase(city, dayCount).collect { result ->
-                result
-                    .onSuccess { forecast ->
-                        _forecast.value = DataState.Success(forecast)
-                    }
-                    .onFailure { error ->
-                        _forecast.value = DataState.Error(
-                            errorType = when (error.message) {
-                                "No local forecast data or data is stale for city: $city" -> ErrorType.StaleData
-                                else -> ErrorType.NetworkError
-                            },
-                            message = error.message
-                        )
-                    }
+                _forecast.value = result
             }
         }
     }
