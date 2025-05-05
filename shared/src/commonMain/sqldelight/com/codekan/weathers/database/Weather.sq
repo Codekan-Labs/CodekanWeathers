@@ -1,16 +1,22 @@
 CREATE TABLE Weather (
     city TEXT NOT NULL PRIMARY KEY,
     country TEXT NOT NULL,
-    temperature REAL NOT NULL,
-    humidity INTEGER NOT NULL,
-    windSpeed REAL NOT NULL,
-    description TEXT NOT NULL,
+    temperature TEXT NOT NULL,
+    humidity TEXT NOT NULL,
+    windSpeed TEXT NOT NULL,
+    conditionDescription TEXT NOT NULL,
+    feelsLike TEXT NOT NULL,
+    rainMmHour TEXT NOT NULL,
+    sunriseTime TEXT NOT NULL,
+    sunsetTime TEXT NOT NULL,
+    timeZone INTEGER NOT NULL,
+    iconCode TEXT NOT NULL,
     lastUpdated INTEGER NOT NULL
 );
 
 insertOrUpdate:
-INSERT OR REPLACE INTO Weather (city, country, temperature, humidity, windSpeed, description, lastUpdated)
-VALUES (?, ?, ?, ?, ?, ?, ?);
+INSERT OR REPLACE INTO Weather (city, country, temperature, humidity, windSpeed, conditionDescription, feelsLike, rainMmHour, sunriseTime, sunsetTime, timeZone,iconCode ,lastUpdated)
+VALUES (?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?);
 
 selectByCity:
 SELECT * FROM Weather WHERE city = ?;

@@ -49,6 +49,9 @@ dependencies {
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.compose)
     implementation(libs.android.navigation)
-    implementation(libs.android.accompanist)
+    implementation(libs.koil.compose)
+    implementation(libs.koil.gif)
+    implementation(libs.compose.material3.icons)
     implementation(libs.android.location)
+    implementation(libs.kotlinx.coroutines.core)
 }

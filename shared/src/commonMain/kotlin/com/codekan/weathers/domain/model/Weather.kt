@@ -10,8 +10,15 @@ import kotlin.native.ObjCName
 data class Weather(
     val city: String,
     val country: String,
-    val temperature: Double,
-    val humidity: Int,
-    val windSpeed: Double,
-    val description: String
+    val temperature: String,
+    val humidity: String,
+    val windSpeed: String,
+    val conditionDescription: String,
+    val feelsLike : String,
+    val rainMmHour : String,
+    val sunriseTime : String,
+    val sunsetTime : String,
+    val timeZone : Int,
+    val cityCountry: String = "$city, $country",
+    val iconCode : String
 )

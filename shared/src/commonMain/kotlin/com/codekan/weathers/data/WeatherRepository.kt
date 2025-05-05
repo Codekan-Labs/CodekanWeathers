@@ -1,6 +1,6 @@
 package com.codekan.weathers.data
 
-import com.codekan.weathers.DatabaseDriverFactory
+import com.codekan.weathers.admirals.database.DatabaseDriverFactory
 import com.codekan.weathers.data.api.DataState
 import com.codekan.weathers.data.api.ErrorType
 import com.codekan.weathers.data.api.WeatherApi
@@ -38,9 +38,15 @@ class WeatherRepository(
                         city = localWeather.city,
                         country = localWeather.country,
                         temperature = localWeather.temperature,
-                        humidity = localWeather.humidity.toInt(),
+                        humidity = localWeather.humidity,
                         windSpeed = localWeather.windSpeed,
-                        description = localWeather.description
+                        conditionDescription = localWeather.conditionDescription,
+                        feelsLike = localWeather.feelsLike,
+                        rainMmHour = localWeather.rainMmHour,
+                        sunriseTime = localWeather.sunriseTime,
+                        sunsetTime = localWeather.sunsetTime,
+                        timeZone = localWeather.timeZone.toInt(),
+                        iconCode = localWeather.iconCode,
                     )
                 )
             )
@@ -58,9 +64,15 @@ class WeatherRepository(
                         city = apiResult.data.city,
                         country = apiResult.data.country,
                         temperature = apiResult.data.temperature,
-                        humidity = apiResult.data.humidity.toLong(),
+                        humidity = apiResult.data.humidity,
                         windSpeed = apiResult.data.windSpeed,
-                        description = apiResult.data.description,
+                        conditionDescription = apiResult.data.conditionDescription,
+                        feelsLike = apiResult.data.feelsLike,
+                        rainMmHour = apiResult.data.rainMmHour,
+                        sunriseTime = apiResult.data.sunriseTime,
+                        sunsetTime = apiResult.data.sunsetTime,
+                        timeZone = apiResult.data.timeZone.toLong(),
+                        iconCode = apiResult.data.iconCode,
                         lastUpdated = Clock.System.now().epochSeconds
                     )
                     apiResult
@@ -135,6 +147,48 @@ class WeatherRepository(
             }
         } catch (e: Exception) {
             DataState.Error(ErrorType.Unknown(e.message ?: "Unknown error"))
+        }
+    }
+
+    suspend fun getRecentWeathers(city: String): Flow<DataState<MutableList<Weather>>> = flow {
+        val recentWeathers = withContext(Dispatchers.IO) {
+            weatherQueries.selectAll().executeAsList().toMutableList()
+        }
+        if (recentWeathers.isNotEmpty()) {
+            emit(DataState.Success(recentWeathers.map {
+                Weather(
+                    city = it.city,
+                    country = it.country,
+                    temperature = it.temperature,
+                    humidity = it.humidity,
+                    windSpeed = it.windSpeed,
+                    conditionDescription = it.conditionDescription,
+                    feelsLike = it.feelsLike,
+                    rainMmHour = it.rainMmHour,
+                    sunriseTime = it.sunriseTime,
+                    sunsetTime = it.sunsetTime,
+                    timeZone = it.timeZone.toInt(),
+                    iconCode = it.iconCode
+                )
+            }.filter { it.city != city }.toMutableList()))
+        } else {
+            emit(DataState.Success(mutableListOf()))
+        }
+    }
+
+    suspend fun getGeoLocation(latitude: Double, longitude: Double): Flow<String> = flow {
+        try {
+            val apiResult = api.getGeoLocation(latitude, longitude)
+            when (apiResult) {
+                is DataState.Success -> {
+                    emit(apiResult.data)
+                }
+                else -> {
+                    emit("Istanbul")
+                }
+            }
+        } catch (e: Exception) {
+            emit("Istanbul")
         }
     }
 

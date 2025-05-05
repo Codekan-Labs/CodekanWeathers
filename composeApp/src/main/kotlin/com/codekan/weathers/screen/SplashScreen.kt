@@ -1,11 +1,13 @@
 package com.codekan.weathers.screen
 
 
+import android.annotation.SuppressLint
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -18,66 +20,50 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.codekan.weathers.R
 import com.codekan.weathers.Screens
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.isGranted
-import com.google.accompanist.permissions.rememberPermissionState
+import com.codekan.weathers.presentation.WeatherViewModel
 import com.google.android.gms.location.LocationServices
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
-@OptIn(ExperimentalPermissionsApi::class)
+
+@SuppressLint("MissingPermission")
 @Composable
 fun SplashScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: WeatherViewModel = koinViewModel()
 ) {
-    var isVisible by remember { mutableStateOf(true) }
+    val isVisible by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
-    val permissionState = rememberPermissionState(
-        android.Manifest.permission.ACCESS_FINE_LOCATION
-    )
-    var city by remember { mutableStateOf("Istanbul") }
-    val context = LocalContext.current
-    // Konum alma
-    LaunchedEffect(Unit) {
+    var permissionRequested by remember { mutableStateOf(false) }
+    // Konum izni talebi
+    val locationProvider = LocationServices.getFusedLocationProviderClient(LocalContext.current)
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
         scope.launch {
-            delay(2000) // Splash animasyonu için 2 saniye bekle
-            if (permissionState.status.isGranted) {
-                // Konum al
-
-                val locationClient = LocationServices.getFusedLocationProviderClient(
-                    context
-                )
-                try {
-                    locationClient.lastLocation.addOnSuccessListener { location ->
-                        if (location != null) {
-                            // Gerçek uygulamada: Reverse geocoding ile şehir al
-                            city = "CurrentLocation" // Örnek, gerçek konumdan şehir çıkar
-                        }
-                        isVisible = false
-                        navController.navigate(Screens.Weather.route)
+            if (isGranted) {
+                locationProvider.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        // Konum alındı, güncelle
+                        viewModel.getGeoLocation(location.latitude, location.longitude)
                     }
-                } catch (e: Exception) {
-                    isVisible = false
-                    navController.navigate(Screens.Weather.route)
+                }.addOnFailureListener {
+                    // Konum alınamadı, hata işleme
+                    viewModel.getGeoLocation(41.01384, 28.94966) // Varsayılan değer
                 }
-            } else {
-                permissionState.launchPermissionRequest()
+
             }
+            permissionRequested = true
+            navController.navigate(Screens.Main.route)
         }
     }
 
-    // İzin durumu değiştiğinde
-    LaunchedEffect(permissionState.status) {
-        if (permissionState.status.isGranted) {
-            // Konum al (yukarıdaki mantık tekrarlanabilir)
-            isVisible = false
-            navController.navigate(Screens.Weather.route)
-        } else if (!permissionState.status.isGranted && !isVisible) {
-            isVisible = false
-            navController.navigate(Screens.Weather.route)
-        }
+    // Splash animasyonu ve izin talebi
+    LaunchedEffect(Unit) {
+        delay(1000) // 1 saniye splash animasyonu
+        permissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
     }
-
     AnimatedVisibility(
         visible = isVisible,
         enter = fadeIn(),
@@ -85,8 +71,7 @@ fun SplashScreen(
     ) {
         Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.primary),
+                .fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -104,13 +89,6 @@ fun SplashScreen(
                     color = MaterialTheme.colorScheme.onPrimary,
                     textAlign = TextAlign.Center
                 )
-                if (!permissionState.status.isGranted) {
-                    Button(
-                        onClick = { permissionState.launchPermissionRequest() }
-                    ) {
-                        Text("Allow Location Access")
-                    }
-                }
             }
         }
     }

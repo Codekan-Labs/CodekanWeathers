@@ -1,7 +1,0 @@
-package com.codekan.weathers
-
-import app.cash.sqldelight.db.SqlDriver
-// Shared code expect class definitions which are implemented in platform specific code.
-expect class DatabaseDriverFactory {
-    fun createDriver(): SqlDriver
-}
