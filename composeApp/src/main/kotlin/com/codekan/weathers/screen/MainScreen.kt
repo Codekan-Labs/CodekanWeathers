@@ -23,7 +23,6 @@ import org.koin.compose.viewmodel.koinViewModel
 @Composable
 fun MainScreen(navController: NavController, viewModel: WeatherViewModel = koinViewModel()) {
     var cityInput by remember { mutableStateOf("") }
-
     val weatherState by viewModel.weather.collectAsState()
     val recentWeathersState by viewModel.recentWeathers.collectAsState()
 
@@ -51,7 +50,8 @@ fun MainScreen(navController: NavController, viewModel: WeatherViewModel = koinV
             state = weatherState,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 16.dp)
+                .padding(bottom = 16.dp),
+            navController
         )
 
         // Recent cities listesi

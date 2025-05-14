@@ -11,15 +11,21 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.codekan.weathers.domain.model.Forecast
+import java.util.TimeZone
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 @Composable
-fun ForecastList(data: com.codekan.weathers.domain.model.Forecast) {
+fun ForecastList(data: Forecast) {
+
     Column(
         modifier = Modifier.fillMaxWidth(),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = /*"5 Günlük Tahmin (${data.forecastItems.size} gün):"*/ "Bilinmiyor",
+            text = "${data.forecastList.size} Günlük Tahmin",
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.primary
         )

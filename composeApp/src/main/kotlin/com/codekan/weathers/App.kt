@@ -15,6 +15,7 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.request.ImageRequest
 import com.codekan.weathers.data.util.TimeUtils
+import com.codekan.weathers.screen.CityDetailScreen
 import com.codekan.weathers.screen.SplashScreen
 import com.codekan.weathers.screen.MainScreen
 
@@ -43,10 +44,14 @@ fun App() {
         composable(Screens.Main.route) {
             MainScreen(navController = navController)
         }
+        composable(Screens.CityDetail.route) {
+            CityDetailScreen(navController = navController)
+        }
     }
 }
 
 sealed class Screens(val route: String) {
     data object Splash : Screens("splash")
     data object Main : Screens("weather")
+    data object CityDetail : Screens("city_detail")
 }

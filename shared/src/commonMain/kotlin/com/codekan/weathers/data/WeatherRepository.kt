@@ -97,7 +97,7 @@ class WeatherRepository(
                 ForecastItem(
                     date = it.date,
                     temperature = it.temperature,
-                    humidity = it.humidity.toInt(),
+                    humidity = it.humidity,
                     windSpeed = it.windSpeed,
                     description = it.description
                 )
@@ -121,8 +121,7 @@ class WeatherRepository(
 
     private suspend fun refreshForecast(city: String, dayCount: Int): DataState<Forecast> = withContext(Dispatchers.IO) {
         try {
-            val apiResult = api.getForecast(city, dayCount)
-            when(apiResult){
+            when(val apiResult = api.getForecast(city, dayCount)){
                 is DataState.Success -> {
                     forecastQueries.transaction {
                         apiResult.data.forecastList.forEach { item ->
@@ -131,7 +130,7 @@ class WeatherRepository(
                                 country = apiResult.data.country,
                                 date = item.date,
                                 temperature = item.temperature,
-                                humidity = item.humidity.toLong(),
+                                humidity = item.humidity,
                                 windSpeed = item.windSpeed,
                                 description = item.description,
                                 lastUpdated = Clock.System.now().epochSeconds

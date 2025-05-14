@@ -15,11 +15,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.codekan.weathers.domain.model.ForecastItem
 import kotlin.time.ExperimentalTime
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun ForecastItem(item: com.codekan.weathers.domain.model.ForecastItem) {
+fun ForecastItem(item: ForecastItem) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -35,16 +36,20 @@ fun ForecastItem(item: com.codekan.weathers.domain.model.ForecastItem) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            val date = /*Instant.ofEpochSecond(item.timestamp)
-                .atZone(ZoneId.systemDefault())
-                .toLocalDateTime()
-                .format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))*/"Bilinmiyor"
             Text(
-                text = date,
+                text = item.date,
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = "${item.temperature}°C",
+                text = item.temperature,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = item.humidity,
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = item.windSpeed,
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(

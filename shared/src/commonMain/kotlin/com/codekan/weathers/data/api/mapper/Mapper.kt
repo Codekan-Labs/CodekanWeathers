@@ -29,14 +29,14 @@ fun WeatherResponse.toDomain(): com.codekan.weathers.domain.model.Weather {
 fun com.codekan.weathers.data.api.model.ForecastResponse.toDomain(): com.codekan.weathers.domain.model.Forecast {
     return com.codekan.weathers.domain.model.Forecast(
         city = this.city?.name ?: "",
-        country = this.city?.country ?: "",
+        country = CountryMapper.getCountryName(this.city?.country) ?: "",
         forecastList = this.list.map { forecast ->
             com.codekan.weathers.domain.model.ForecastItem(
                 date = forecast.dt.toString(),
-                temperature = forecast.main?.temp ?: 0.0,
-                humidity = forecast.main?.humidity ?: 0,
-                windSpeed = forecast.wind?.speed ?: 0.0,
-                description = forecast.weather.firstOrNull()?.description ?: ""
+                temperature = temperatureToString(forecast.main?.temp),
+                humidity = humidityToString(forecast.main?.humidity),
+                windSpeed = windSpeedToString(forecast.wind?.speed),
+                description = forecast.weather.firstOrNull()?.description?.replaceFirstChar { if (it. isLowerCase()) it. titlecase() else it. toString() } ?: "Unknown Description"
             )
         }
     )

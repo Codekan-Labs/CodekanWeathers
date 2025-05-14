@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import com.codekan.weathers.Screens
 import com.codekan.weathers.data.api.DataState
 import com.codekan.weathers.domain.model.Weather
 import com.codekan.weathers.icons.WeatherIcon
@@ -41,7 +43,8 @@ import com.codekan.weathers.icons.WeatherIcon
 @Composable
 fun WeatherCard(
     state: DataState<Weather>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController? = null
 ) {
     AnimatedVisibility(
         visible = true,
@@ -54,7 +57,10 @@ fun WeatherCard(
                 .fillMaxWidth(),
             border = BorderStroke(1.dp, Color.White.copy(alpha = 0.3f)),
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            onClick = {
+                navController?.navigate(Screens.CityDetail.route)
+            }
         ) {
             Box(
                 modifier = Modifier

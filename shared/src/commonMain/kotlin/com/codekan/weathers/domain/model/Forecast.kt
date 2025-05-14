@@ -19,8 +19,8 @@ data class Forecast(
 @ObjCName("ForecastItem")
 data class ForecastItem(
     val date: String,
-    val temperature: Double,
-    val humidity: Int,
-    val windSpeed: Double,
+    val temperature: String,
+    val humidity: String,
+    val windSpeed: String,
     val description: String
 )

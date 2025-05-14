@@ -39,7 +39,7 @@ actual class WeatherViewModel actual constructor(
             currentCity.collectLatest { city ->
                 getWeather()
                 getRecentWeathers()
-                //getForecast(7)
+                getForecast(5)
             }
         }
 
